@@ -13,3 +13,7 @@ def getjs(jsfile):
 @app.route('/img/<imgfile>')
 def getimg(imgfile):
     return send_file('static/img/'+imgfile)
+
+@app.route('/models/<modfile>')
+def getmod(modfile):
+    return send_file('static/models/'+modfile)

@@ -10,9 +10,23 @@
 	<body>
 		<script src="./js/three.js"></script>
 		<script>
+			const Http = new XMLHttpRequest();
+			const url='http://esp8266.local/';
+
+			Http.onreadystatechange = (e) => {
+			  console.log(Http.responseText)//收集数据->正则化解析->渲染
+			  
+			  RegExp.exec(Http.responseText)
+			}
+
+			var timer = setInterval(function() {
+				Http.open("GET", url);
+				Http.send();
+			}, 1000);
+
 			const scene = new THREE.Scene();
 			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-
+			
 			const renderer = new THREE.WebGLRenderer();
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			document.body.appendChild( renderer.domElement );
@@ -28,6 +42,32 @@
 			const pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
 			scene.add( pointLightHelper );
 
+			//const objectLoader = new THREE.ObjectLoader();
+			//objectLoader.load( './models/foot.json', 
+			//	// onLoad callback
+			//	function onLoad(object) {
+			//		//object.traverse( function ( child ) {
+			//		//	if ( child.isMesh ) {
+			//		//		child.material.map = texture;
+			//		//		child.material.needsUpdate = true;
+			//		//	}
+			//		//} );
+			//		//object.position.y = - 1;
+			//		//object.scale.set( 0.1, 0.1, 0.1 );
+			//		const material = new THREE.MeshLambertMaterial( { map: texture } );
+			//		const foot = new THREE.Mesh( object, material );
+			//		scene.add( foot );
+			//	},
+			//	// (optional) onProgress callback
+			//	// function onProgress() {
+			//		// do something
+			//	// },
+			//	// onError callback
+			//	undefined,
+			//	function onError(err) {
+			//		console.log('An loading error happened');
+			//	} );
+
 			const geometry = new THREE.BoxGeometry( 3, 3, 3 );
 			const material = new THREE.MeshLambertMaterial( { map: texture } );
 			const cube = new THREE.Mesh( geometry, material );
@@ -38,10 +78,12 @@
 			function animate() {
 				requestAnimationFrame( animate );
 
-				cube.rotation.x += 0.01;
+				cube.rotation.x += 0.01;//控制旋转
 				cube.rotation.y += 0.01;
 
+
 				renderer.render( scene, camera );
+
 			};
 
 			animate();
